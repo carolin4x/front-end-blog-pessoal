@@ -5,25 +5,25 @@
     margin: 0 auto;
 }
 
-
 .caixa{
-    background-color: #3f51b5c2;
+    background-color: #f7ecf0;
 }
 
 .titulo{
-   color: white !important;
+   color: rgb(54, 7, 7) !important;
    font-weight: bold !important;
    text-align: center;
+   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif !important
 }
 
 .botao{
-    border-color: white !important;
-    background-color: #8612565e !important;
-    color: white !important;
+    border-color: rgb(190, 174, 174) !important;
+    background-color: #861256c4 !important;
+    color: rgb(236, 204, 204) !important;
 }
 
 .postagens{
-    background-color: white;
+    background-color: rgb(53, 45, 45);
 }
 
 .text-decorator-none{

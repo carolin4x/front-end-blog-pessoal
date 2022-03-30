@@ -11,7 +11,7 @@ function navbar() {
                 <Toolbar variant="dense">
                     <Box className="cursor" >
                         <Typography variant="h5" color="inherit">
-                            BLOGUIN
+                            Café?
                         </Typography>
                     </Box>
 
