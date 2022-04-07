@@ -1,23 +1,21 @@
 import React, { ChangeEvent, useState, useEffect } from 'react';
 import { Box, Button, Grid, TextField, Typography } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToken } from '../../store/tokens/actions';
 import UserLogin from '../../models/UserLogin';
-import useLocalStorage from 'react-use-localstorage';
 import { login } from '../../services/Service';
 import './Login.css';
+import { toast } from 'react-toastify';
+
 
 
 function Login() {
+    let history = useHistory();
+    const dispatch = useDispatch();
+    const [token, setToken] = useState("");
 
-    // redireciona o usuário para determinada pagina
-    let history = useHistory()
-
-    // hooks que vão manipular o nosso Local Storage para gravar o Token
-    const [token, setToken] = useLocalStorage('token')
-
-    // useState define como uma determinada variavel será inicializada quando o Comp. for renderizado
     const [userLogin, setUserLogin] = useState<UserLogin>({
-
         id: 0,
         nome: "",
         usuario: "",
@@ -26,29 +24,45 @@ function Login() {
         token: ""
     })
 
-
-
-    // função que junto com a setUserLogin irá atualizar o valor inicial da userLogin
-    function updatedModel(e: ChangeEvent<HTMLInputElement>) { //updatedModel: trabalha em conjunto com o useState
+    function updatedModel(e: ChangeEvent<HTMLInputElement>) {
         setUserLogin({
-            ...userLogin, //spread operator: ... 
-            [e.target.name]: e.target.value //1º lado: se referencia à propriedade que será captada, o 2º lado são os valores capturados.
+            ...userLogin,
+            [e.target.name]: e.target.value
         })
     }
 
-    useEffect(() => {
-        if (token != "") {
+    useEffect(()=>{
+        if(token !== ""){
+            dispatch(addToken(token))
             history.push("/home")
         }
     }, [token])
 
-    async function onSubmit(e: ChangeEvent<HTMLFormElement>) { //vai olhar o form como um todo
-        e.preventDefault(); //previne que o botão onSubmt atualize a tela, mantendo assim o padrão de SPA
+    async function onSubmit(e: ChangeEvent<HTMLFormElement>) {
+        e.preventDefault();
         try {
             await login(`/usuarios/logar`, userLogin, setToken)
-            alert("Usuário logado com suscesso!")
-        } catch (error) {
-            alert("Dados inconsistentes!")
+            toast.success("Usuário logado com sucesso!", {
+                position: "top-right", //posição do alerta
+                autoClose: 2000, //tempo da notificação na tela
+                hideProgressBar: false, //se aparece barra de progresso
+                closeOnClick: true, //se aparece o X para fechar a notificação
+                pauseOnHover: true, //se passar o mouse em cima, o tempo para fechar congela
+                draggable: false, //se pode mover a notificação de local
+                theme: "colored", // visual
+                progress: undefined,
+            });
+        } catch (error){
+            toast.error("Usuário ou senha não encontrados! Por favor, digite novamente.", {
+                position: "top-right", //posição do alerta
+                autoClose: 2000, //tempo da notificação na tela
+                hideProgressBar: false, //se aparece barra de progresso
+                closeOnClick: true, //se aparece o X para fechar a notificação
+                pauseOnHover: true, //se passar o mouse em cima, o tempo para fechar congela
+                draggable: false, //se pode mover a notificação de local
+                theme: "colored", // visual
+                progress: undefined,
+            });
         }
     }
 
@@ -58,7 +72,7 @@ function Login() {
                 <Box paddingX={20}>
                     <form onSubmit={onSubmit}>
                         <Typography variant="h3" gutterBottom color="textPrimary" component="h3" align="center"
-                            className="textosLogin">Entrar</Typography>
+                            className="textos1">Entrar</Typography>
                         <TextField value={userLogin.usuario} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)} id="usuario" label="usuário" variant="outlined" name="usuario" margin="normal" fullWidth />
                         <TextField value={userLogin.senha} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)} id="senha" label="senha" variant="outlined" name="senha" margin="normal" type="password" fullWidth />
                         <Box marginTop={2} textAlign="center">
@@ -75,7 +89,7 @@ function Login() {
                             </Typography>
                         </Box>
                         <Link to="/cadastrousuario">
-                            <Typography variant="subtitle1" gutterBottom align="center" className="textosLogin">Cadastre-se</Typography>
+                            <Typography variant="subtitle1" gutterBottom align="center" className="textos1">Cadastre-se</Typography>
                         </Link>
                     </Box>
                 </Box>

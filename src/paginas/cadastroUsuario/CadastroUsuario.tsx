@@ -4,12 +4,14 @@ import { Link, useHistory } from 'react-router-dom';
 import User from '../../models/User';
 import { cadastroUsuario } from '../../services/Service';
 import './CadastroUsuario.css';
+import { toast } from 'react-toastify';
 
 function CadastroUsuario() {
-
     let history = useHistory();
-    const [confirmarSenha, setConfirmarSenha] = useState<String>("") /*vai pegar info que usuario ta digitando */
-    const [user, setUser] = useState<User>( 
+    const [confirmarSenha, setConfirmarSenha] = useState<String>("")
+
+    //atualiza a partir do que o usuario está digitando
+    const [user, setUser] = useState<User>(
         {
             id: 0,
             nome: "",
@@ -18,7 +20,8 @@ function CadastroUsuario() {
             foto: ""
         })
 
-    const [userResult, setUserResult] = useState<User>( /*vai armazenar os valores e retorna a resposta da requisição ao backend */
+    //atualiza a partir da resposta do back-end
+    const [userResult, setUserResult] = useState<User>(
         {
             id: 0,
             nome: "",
@@ -27,13 +30,14 @@ function CadastroUsuario() {
             foto: ""
         })
 
+    //quando logado, vai ser redirecionado para a página de login
     useEffect(() => {
-        if (userResult.id != 0) {
+        if (userResult.id !== 0) {
             history.push("/login")
         }
     }, [userResult])
 
-
+    //pega o que está sendo digitado em "confirmarSenha" e atualiza o state confirmarSenha
     function confirmarSenhaHandle(e: ChangeEvent<HTMLInputElement>) {
         setConfirmarSenha(e.target.value)
     }
@@ -46,13 +50,35 @@ function CadastroUsuario() {
         })
     }
 
+    //função para cadastrar no banco
     async function cadastrar(e: ChangeEvent<HTMLFormElement>) {
-        e.preventDefault()
+        e.preventDefault() //previne de atualizar a página
         if (confirmarSenha === user.senha && user.senha.length >= 8) {
-            await cadastroUsuario(`/usuarios/cadastrar`, user, setUserResult)
-            alert('Usuario cadastrado com sucesso')
+            //rota, dados do usuário, função que vai alterar os dados 
+            cadastroUsuario(`/usuarios/cadastrar`, user, setUserResult)
+            //com as crases, você consegue concatenar a url com parâmetros dinâmicos
+            
+            toast.success("Usuário cadastrado com sucesso!", {
+                position: "top-right", //posição do alerta
+                autoClose: 2000, //tempo da notificação na tela
+                hideProgressBar: false, //se aparece barra de progresso
+                closeOnClick: true, //se aparece o X para fechar a notificação
+                pauseOnHover: true, //se passar o mouse em cima, o tempo para fechar congela
+                draggable: false, //se pode mover a notificação de local
+                theme: "colored", // visual
+                progress: undefined,
+            });
         } else {
-            alert('Dados inconsistentes. Favor verificar as informações de cadastro.')
+            toast.error("Dados inconsistentes! Favor verificar as informações de cadastro.", {
+                position: "top-right", //posição do alerta
+                autoClose: 2000, //tempo da notificação na tela
+                hideProgressBar: false, //se aparece barra de progresso
+                closeOnClick: true, //se aparece o X para fechar a notificação
+                pauseOnHover: true, //se passar o mouse em cima, o tempo para fechar congela
+                draggable: false, //se pode mover a notificação de local
+                theme: "colored", // visual
+                progress: undefined,
+            });
         }
     }
 
@@ -63,58 +89,17 @@ function CadastroUsuario() {
                 <Box paddingX={10}>
                     <form onSubmit={cadastrar}>
                         <Typography variant="h3" gutterBottom color="textPrimary" component="h3" align="center"
-                            className="textosCadastro">Cadastre-se</Typography>
-                        <TextField
-                            value={user.nome}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
-                            id="nome"
-                            label="nome"
-                            variant="outlined"
-                            name="nome"
-                            margin="normal"
-                            fullWidth required />
-
-                        <TextField
-                            value={user.usuario}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
-                            id="usuario"
-                            label="usuario"
-                            variant="outlined"
-                            name="usuario"
-                            margin="normal"
-                            fullWidth required />
-
-                        <TextField
-                            value={user.senha}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
-                            id="senha"
-                            label="senha"
-                            variant="outlined"
-                            name="senha"
-                            margin="normal"
-                            type="password"
-                            fullWidth required />
-
-                        <TextField
-                            value={confirmarSenha}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => confirmarSenhaHandle(e)}
-                            id="confirmarSenha"
-                            label="confirmarSenha"
-                            variant="outlined"
-                            name="confirmarSenha"
-                            margin="normal"
-                            type="password"
-                            fullWidth required />
-
-                        <TextField
-                            value={user.foto}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
-                            id="foto"
-                            label="foto"
-                            variant="outlined"
-                            name="foto"
-                            margin="normal"
-                            fullWidth />
+                            className="textosCadastro">Cadastrar</Typography>
+                        <TextField value={user.nome} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
+                            id="nome" label="nome" variant="outlined" name="nome" margin="normal" required fullWidth />
+                        <TextField value={user.usuario} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
+                            id="usuario" label="usuario" variant="outlined" name="usuario" margin="normal" type="email" required fullWidth />
+                        <TextField value={user.foto} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
+                            id="foto" label="foto" variant="outlined" name="foto" margin="normal" fullWidth />
+                        <TextField value={user.senha} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
+                            id="senha" label="senha" variant="outlined" name="senha" margin="normal" type="password" required fullWidth />
+                        <TextField value={confirmarSenha} onChange={(e: ChangeEvent<HTMLInputElement>) => confirmarSenhaHandle(e)}
+                            id="confirmarSenha" label="confirmarSenha" variant="outlined" name="confirmarSenha" margin="normal" type="password" required fullWidth />
 
                         <Box marginTop={2} textAlign="center">
                             <Link to='/login' className="text-decorator-none">
@@ -122,10 +107,11 @@ function CadastroUsuario() {
                                     Cancelar
                                 </Button>
                             </Link>
-                                <Button type="submit" variant="contained" color="primary" className="botaoCadastrar">
+                            <Button type="submit" variant="contained" color="primary" className="botaoCadastrar">
                                 Cadastrar
-                                </Button>
+                            </Button>
                         </Box>
+
                     </form>
                 </Box>
             </Grid>
