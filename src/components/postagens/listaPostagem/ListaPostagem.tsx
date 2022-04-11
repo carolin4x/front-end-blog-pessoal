@@ -34,7 +34,7 @@ function ListaPostagem() {
   }, [token])
 
   async function getPost() {
-    await busca("/postagens/all", setPosts, {
+    await busca("/postagens", setPosts, {
       headers: {
         'Authorization': token
       }
@@ -51,7 +51,7 @@ function ListaPostagem() {
     <>
       {
         posts.map(post => (
-          <Box m={2} >
+          <Box m={2} className='cardPostagem'>
             <Card variant="outlined">
               <CardContent>
                 <Typography color="textSecondary" gutterBottom>

@@ -8,7 +8,7 @@ import Login from "./paginas/login/Login";
 import CadastroUsuario from './paginas/cadastroUsuario/CadastroUsuario';
 import './App.css';
 import ListaTema from './components/temas/listaTema/ListaTema';
-import ListaPostagem from './components/postagens/listapostagem/ListaPostagem';
+import ListaPostagem from './components/postagens/listaPostagem/ListaPostagem';
 import CadastroPost from './components/postagens/cadastroPost/CadastroPost';
 import CadastroTema from './components/temas/cadastroTema/CadastroTema';
 import DeletarPostagem from './components/postagens/deletarPostagem/DeletarPostagem';

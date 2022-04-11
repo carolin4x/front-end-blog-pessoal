@@ -1,3 +1,10 @@
 .text-decorator-none{
     text-decoration: none;
 }
+
+.cardPostagem {
+    width: 90% !important;
+    margin: 3% !important;
+    text-align: center;
+    border-style: cover;
+}
